@@ -9,7 +9,7 @@
 # test_add_new_book_input_invalid_name_book_new_book_not_added_to_the_books_genre
 # проверяет невозможность добавления в словарь books_genre невалидных названий книг
 
-# test_add_new_book_input_repeat_book_added_one_book_to_the_books_genre
+# test_add_new_book_add_book_twice_only_one_added_in_books_genre
 # проверяет невозможность добавления одной книги 2 раза
 
 # test_set_book_genre_input_existing_genre_book_set_genre

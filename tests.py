@@ -31,8 +31,7 @@ class TestBooksCollector:
     def test_add_new_book_input_valid_name_book_new_book_added_to_the_books_genre(self, book_name):
         book_collection = BooksCollector()
         book_collection.add_new_book(book_name)
-        assert 'Общая теория занятости, процента и денег' in book_collection.get_books_genre() or 'Путешествия Гулливера' in book_collection.get_books_genre() or 'Я' in book_collection.get_books_genre()
-
+        assert book_name in book_collection.get_books_genre()
 
 
    # Тестируем добавление книг с невалидным названием
@@ -45,16 +44,13 @@ class TestBooksCollector:
         assert book_collection.get_books_genre() == {}
 
 
-
     #Тестируем повторное добавление книги
-    double_book = ['Путешествия Гулливера', 'Путешествия Гулливера']
 
-    @pytest.mark.parametrize('book_name', double_book)
-    def test_add_new_book_input_repeat_book_added_one_book_to_the_books_genre(self, book_name):
+    def test_add_new_book_add_book_twice_only_one_added_in_books_genre(self):
         book_collection = BooksCollector()
-        book_collection.add_new_book(book_name)
+        book_collection.add_new_book('Путешествия Гулливера')
+        book_collection.add_new_book('Путешествия Гулливера')
         assert book_collection.get_books_genre() == {'Путешествия Гулливера': ''}
-
 
 
     #1 Проверка по жанрам
@@ -72,8 +68,6 @@ class TestBooksCollector:
         book_collection.add_new_book(book1)
         book_collection.set_book_genre(book1, genre1)
         assert book_collection.get_book_genre(book1) in ['Фантастика', 'Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
-
-
 
     #2 Проверка по жанрам
    # Установим книге несуществующий жанр
@@ -97,7 +91,6 @@ class TestBooksCollector:
         book_collection.set_book_genre(book3, genre3)
         assert book_collection.get_books_with_specific_genre('Фантастика') == ['Дюна'] or book_collection.get_books_with_specific_genre('Ужасы') == ['Кладбище домашних животных'] or book_collection.get_books_with_specific_genre('Мультфильмы') == ['Книга жизни'] or book_collection.get_books_with_specific_genre('Комедии') == ['Горе от ума']
 
-
     #4 Проверка по жанрам
    # Проверяем вывод списка книг по несуществующему в списке жанру
 
@@ -108,25 +101,20 @@ class TestBooksCollector:
         book_collection.set_book_genre(book4, genre4)
         assert book_collection.get_books_with_specific_genre('Криминал') == []
 
-
-
-    #Проверяем что возвращаются книги подходящие детям
-
-    collection_book_for_children = [
-        ('Дюна', 'Фантастика'),
-        ('Кладбище домашних животных', 'Ужасы'),
-        ('Книга жизни', 'Мультфильмы'),
-        ('Горе от ума', 'Комедии'),
-        ('Внутри убийцы', 'Детективы')
-    ]
-
-    @pytest.mark.parametrize('book5, genre5', collection_book_for_children)
-    def test_get_books_for_children_input_books_all_genre_get_books_except_genre_age_rating(self, book5, genre5):
+    # Проверяем что возвращаются книги подходящие детям
+    def test_get_books_for_children_input_books_all_genre_get_books_except_genre_age_rating(self):
         book_collection = BooksCollector()
-        book_collection.add_new_book(book5)
-        book_collection.set_book_genre(book5, genre5)
-        assert book_collection.get_books_for_children() != ['Кладбище домашних животных'] or book_collection.get_books_for_children() != ['Внутри убийцы']
-
+        book_collection.add_new_book('Дюна')
+        book_collection.add_new_book('Кладбище домашних животных')
+        book_collection.add_new_book('Внутри убийцы')
+        book_collection.add_new_book('Книга жизни')
+        book_collection.add_new_book('Горе от ума')
+        book_collection.set_book_genre('Дюна', 'Фантастика')
+        book_collection.set_book_genre('Кладбище домашних животных', 'Ужасы')
+        book_collection.set_book_genre('Внутри убийцы', 'Детективы')
+        book_collection.set_book_genre('Книга жизни', 'Мультфильмы')
+        book_collection.set_book_genre('Горе от ума', 'Комедии')
+        assert book_collection.get_books_for_children() == ['Дюна', 'Книга жизни', 'Горе от ума']
 
     #Проверяем Добавление книги в избранное
     collection_book_for_favorite = [
@@ -137,7 +125,6 @@ class TestBooksCollector:
     def test_add_book_in_favorites_add_books_show_books_in_favorite_list(self, book6, genre6):
         book_collection = BooksCollector()
         book_collection.add_new_book(book6)
-        book_collection.set_book_genre(book6, genre6)
         book_collection.add_book_in_favorites(book6)
         assert book_collection.get_list_of_favorites_books() == ['Дюна'] or book_collection.get_list_of_favorites_books() == ['Кладбище домашних животных']
 
